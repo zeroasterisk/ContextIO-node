@@ -80,6 +80,8 @@ would be:
 ``` js
 ctxioClient.RESOURCE(INSTANCE_ID).SUB_RESOURCE().METHOD(PARAMS, CALLBACK_FN)
 ```
+Note that if the resource name contains an underscore character (eg. connect_tokens), you can use both connect_tokens() or connectTokens() with this library.
+
 
 ### Parameters
 Call parameters are passed as an `Object` with properties matching parameter name. Parameters for POST or GET work the same: an Object passed as the first argument of the method call.
