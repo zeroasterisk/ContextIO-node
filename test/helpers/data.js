@@ -55,6 +55,9 @@ exports.data = {
 				emailMessageId: '<4E975E2A.3050905@gmail.com>',
 				trashFolder: 'PATH TO TRASH FOLDER TO MOVE THE TEST MESSAGE TO AFTER SUCCESSFUL POST (EG. "[Gmail]/Trash")'
 			},
+			flags: {
+				
+			}
 		},
 		
 		sources: {
