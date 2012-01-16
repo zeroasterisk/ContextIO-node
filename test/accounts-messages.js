@@ -9,51 +9,47 @@ var ContextIO = require('../lib/ContextIO.js'),
 var ctxio = new ContextIO.Client(hlp.apiVersion, 'https://api.context.io', hlp.apiKeys);
 
 vows.describe('ContextIO/accounts/messages').addBatch({
-	'A list': {
-		'being fetched': {
-			topic: function () {
-				ctxio.accounts(tData.accountId).messages().get(this.callback);
-			},
-			'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages', 'GET'),
-			'responds with 200': hlp.macros.assertStatus(200),
-			'returns an array': hlp.macros.assertBodyType('isArray'),
-			'returns what looks like messages': function (err, r) {
-				assert.ok(('email_message_id' in r.body[0]));
-				assert.ok(('sources' in r.body[0]));
-				assert.ok(('folders' in r.body[0]));
-			}
+	'A list being fetched': {
+		topic: function () {
+			ctxio.accounts(tData.accountId).messages().get(this.callback);
+		},
+		'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages', 'GET'),
+		'responds with 200': hlp.macros.assertStatus(200),
+		'returns an array': hlp.macros.assertBodyType('isArray'),
+		'returns what looks like messages': function (err, r) {
+			assert.ok(('email_message_id' in r.body[0]));
+			assert.ok(('sources' in r.body[0]));
+			assert.ok(('folders' in r.body[0]));
 		}
 	}
 }).addBatch({
-	'Manipulating instances ': {
-		'by creating one': {
-			topic: function () {
-				ctxio.accounts(tData.accountId).messages().post({
-					dst_folder: tData.create.folder,
-					message: { path: path.join(__dirname, 'helpers', 'anEmail.eml')}
-				}, this.callback);
+	'Manipulating instances by creating one': {
+		topic: function () {
+			ctxio.accounts(tData.accountId).messages().post({
+				dst_folder: tData.create.folder,
+				message: { path: path.join(__dirname, 'helpers', 'anEmail.eml')}
+			}, this.callback);
+		},
+		'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages', 'POST'),
+		'responds with 201': hlp.macros.assertStatus(201),
+		
+		'and fetching it': {
+			topic: function (createResp) {
+				ctxio.accounts(tData.accountId).messages(tData.create.emailMessageId).get(this.callback);
 			},
-			'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages', 'POST'),
-			'responds with 201': hlp.macros.assertStatus(201),
+			'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages/'+ encodeURIComponent(tData.create.emailMessageId), 'GET'),
+			'responds with 200': hlp.macros.assertStatus(200),
+			'returns an object': hlp.macros.assertBodyType('isObject'),
+			'validates the instance has the correct properties': function (err, r) {
+				assert.equal(r.body.email_message_id, tData.create.emailMessageId);
+			},
 			
-			'and fetching it': {
-				topic: function (createResp) {
-					ctxio.accounts(tData.accountId).messages(tData.create.emailMessageId).get(this.callback);
+			'then moving it to the Trash': {
+				topic: function () {
+					ctxio.accounts(tData.accountId).messages(tData.create.emailMessageId).post({dst_folder: tData.create.trashFolder, move: 1}, this.callback);
 				},
-				'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages/'+ encodeURIComponent(tData.create.emailMessageId), 'GET'),
-				'responds with 200': hlp.macros.assertStatus(200),
-				'returns an object': hlp.macros.assertBodyType('isObject'),
-				'validates the instance has the correct properties': function (err, r) {
-					assert.equal(r.body.email_message_id, tData.create.emailMessageId);
-				},
-				
-				'then moving it to the Trash': {
-					topic: function () {
-						ctxio.accounts(tData.accountId).messages(tData.create.emailMessageId).post({dst_folder: tData.create.trashFolder, move: 1}, this.callback);
-					},
-					'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages/'+encodeURIComponent(tData.create.emailMessageId), 'POST'),
-					'responds with 200': hlp.macros.assertStatus(200)
-				}
+				'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages/'+encodeURIComponent(tData.create.emailMessageId), 'POST'),
+				'responds with 200': hlp.macros.assertStatus(200)
 			}
 		}
 	}
@@ -108,13 +104,5 @@ vows.describe('ContextIO/accounts/messages').addBatch({
 			assert.ok(('email_message_ids' in r.body));
 			assert.equal(r.body.email_message_ids[0], r.body.messages[0].email_message_id);
 		}
-	},
-	'Fetching flags': {
-		topic: function () {
-			ctxio.accounts(tData.accountId).messages(tData.messageId).flags().get(this.callback);
-		},
-		'made the right API call': hlp.macros.assertCall('accounts/'+tData.accountId+'/messages/'+tData.messageId+'/flags', 'GET'),
-		'responds with 200': hlp.macros.assertStatus(200),
-		'returns an array': hlp.macros.assertBodyType('isArray')
 	}
 }).export(module);
