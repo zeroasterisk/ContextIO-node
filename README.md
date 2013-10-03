@@ -103,9 +103,9 @@ Your callback function gets 3 arguments:
 Node.js version
 ---------------
 
-It has been tested on Node.js 0.6, it will be tested to support Node.js 0.4 very soon.
+It has been tested on Node.js 0.6.
 
 Examples
 --------
 
-We still need to post a good set of examples but in the meantime, you can refer to the test files for an example of every single call.
+Please refer to the test files for an example of every single call.
