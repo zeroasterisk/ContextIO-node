@@ -43,7 +43,7 @@ Instantiating the client while specifying the API version and endpoint:
 
 ``` js
   var ContextIO = require('contextio');
-  var ctxioClient = new ContextIO.Client('2.0', 'http://api.context.io', {
+  var ctxioClient = new ContextIO.Client('2.0', 'https://api.context.io', {
     key: "YOUR CONTEXT.IO CONSUMER KEY",
     secret: "YOUR CONTEXT.IO CONSUMER SECRET"
   });
