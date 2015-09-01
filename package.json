@@ -1,15 +1,15 @@
 {
-	"name": "contextio",
-	"description": "Official Node.js client library for the Context.IO Email API",
+	"name": "contextio-temp",
+	"description": "Fork of Official Node.js client library for the Context.IO Email API",
 	"keywords": ["email","ContextIO","api","imap","gmail","tools","rest"],
 	"version": "0.4.0",
-	"author": "Bruno Morency <bruno@context.io>",
+	"author": "Alan Blount <alan@zeroasterisk.com>",
 	"repository": {
 		"type": "git",
-		"url": "http://github.com/ContextIO/ContextIO-node.git"
+		"url": "http://github.com/zeroasterisk/ContextIO-node.git"
 	},
 	"bugs": {
-		"url": "http://github.com/ContextIO/ContextIO-node/issues",
+		"url": "http://github.com/zeroasterisk/ContextIO-node/issues",
 		"email": "support@context.io"
 	},
 	"devDependencies": {
